@@ -32,18 +32,33 @@ After merging and cleaning, our analysis covers a comprehensive set of recipes w
    - Removed extreme nutritional values above 99th percentile
 
 
+<iframe
+  src="assets/cal_distribution.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+The distribution of calories across recipes shows a right-skewed pattern, with most recipes containing moderate calorie counts. This aligns with what we might expect from real-world recipes, where extreme calorie counts are less common.
+
 
 The distribution of calories across recipes shows a right-skewed pattern, with most recipes containing moderate calorie counts. This aligns with what we might expect from real-world recipes, where extreme calorie counts are less common.
 
 
 ### Nutritional Analysis by Calorie Content
 
-Here's how other nutritional values vary across calorie quintiles:
+Here's how nutritional values and recipe characteristics vary across calorie quintiles:
 
-| Calorie Range | Avg Fat (PDV) | Avg Protein (PDV) | Avg Carbs (PDV) | Avg Steps |
-|---------------|---------------|-------------------|-----------------|-----------|
-| 0-20%         | 12.2         | 8.5              | 15.3           | 6.8       |
-| 20-40%        | 18.7         | 12.3             | 22.1           | 7.2       |
-| 40-60%        | 25.4         | 15.8             | 28.6           | 7.8       |
-| 60-80%        | 34.2         | 19.7             | 35.9           | 8.3       |
-| 80-100%       | 48.6         | 25.4             | 45.2           | 8.9       |
+| Calorie Percentile | Total Fat (PDV) | Protein (PDV) | Carbs (PDV) | Sugar (PDV) | Sodium (PDV) | Saturated Fat (PDV) | Avg Ingredients | Avg Steps |
+|-------------------|-----------------|---------------|-------------|-------------|--------------|-------------------|----------------|------------|
+| 0-20%             | 5.06           | 4.87          | 3.08        | 20.61       | 7.88         | 5.86              | 7.29           | 7.85       |
+| 20-40%            | 11.98          | 14.04         | 6.66        | 34.91       | 12.64        | 14.29             | 8.44           | 8.94       |
+| 40-60%            | 19.69          | 25.74         | 9.19        | 41.56       | 19.28        | 24.07             | 9.20           | 9.75       |
+| 60-80%            | 30.25          | 37.95         | 12.44       | 51.03       | 26.04        | 38.79             | 9.82           | 10.78      |
+| 80-100%           | 56.60          | 59.91         | 18.13       | 66.15       | 39.25        | 69.37             | 10.57          | 12.07      |
+
+This table reveals several interesting patterns:
+- As calories increase, all nutritional components tend to increase proportionally
+- Higher-calorie recipes tend to be more complex, with more ingredients and steps
+- The jump in nutritional values is particularly dramatic in the highest calorie quintile (80-100%)
+- Sugar content shows the smallest relative increase across quintiles compared to other nutrients

@@ -95,3 +95,49 @@ We selected MAE as our evaluation metric because:
 4. The linear nature of the error better matches our use case - being off by 100 calories isn't necessarily 4 times worse than being off by 50 calories
 
 
+## Base Model Performance
+
+For our baseline prediction model, we focused on two fundamental nutritional predictors:
+- Total fat content (PDV)
+- Protein content (PDV)
+
+These features were chosen because:
+1. Total fat showed the strongest correlation with calories in our exploratory analysis
+2. Protein is a key macronutrient that contributes significantly to caloric content
+3. Both measurements are readily available in standard nutritional information
+
+Using a simple linear regression model, our baseline achieved a Mean Absolute Error (MAE) of 75.99 calories. To put this error in context:
+- The average recipe in our dataset contains 328.66 calories
+- Our model's predictions are off by about 76 calories on average
+- This represents approximately 23% of the mean calorie content
+
+This relatively strong performance from just two features validates our initial analysis that these basic nutritional components are indeed strong predictors of calorie content.
+
+## Final Model Performance
+
+Our final model expanded upon the baseline by incorporating additional nutritional relationships and recipe characteristics that logically influence calorie content. 
+
+### Feature Engineering Rationale
+We added three key engineered features that capture important nutritional relationships:
+
+1. **Protein-to-Fat Ratio**: This ratio helps identify recipes' primary caloric sources. Since proteins (4 cal/g) and fats (9 cal/g) contribute differently to total calories, their relative proportions provide insight into caloric density.
+
+2. **Carbs-to-Protein Ratio**: Similar to protein-to-fat, this ratio helps distinguish between carbohydrate-heavy recipes (like desserts) and protein-focused dishes (like meat entrees), which typically have different caloric profiles.
+
+3. **Saturated Fat Ratio**: The proportion of total fat that is saturated helps identify recipes with different types of fat sources (e.g., plant-based oils vs. animal fats), which can indicate different cooking methods and overall caloric content.
+
+### Model Selection and Tuning
+We chose Lasso regression for our final model because:
+1. It performs automatic feature selection through L1 regularization
+2. It helps identify the most important predictors while reducing the impact of less relevant ones
+3. It maintains interpretability of coefficients, unlike black-box models
+
+We used GridSearchCV with 5-fold cross-validation to tune the Lasso's alpha parameter, testing 50 values between 10^-4 and 1. The optimal alpha value of 1.0 indicates that a strong regularization was beneficial, suggesting some features were less important for prediction.
+
+### Model Performance
+The final model achieved an MAE of 10.11 calories, compared to the baseline model's MAE of 75.99 calories - an 87% improvement in prediction accuracy. This dramatic improvement suggests that:
+1. The added nutritional ratios captured important relationships beyond raw values
+2. The combination of multiple nutritional components provides better predictive power
+3. Recipe characteristics (steps, ingredients) contribute useful additional information
+
+The model coefficients reveal that carbohydrates, total fat, and protein remain the strongest predictors, which aligns with nutritional science as these are the primary sources of calories in food.

@@ -34,7 +34,7 @@ After merging and cleaning, our analysis covers a comprehensive set of recipes w
 
 <iframe
   src="assets/cal_distribution.html"
-  width="1200"
+  width="1500"
   height="500"
   frameborder="0"
 ></iframe>
@@ -47,7 +47,7 @@ Our analysis revealed strong correlations between calories and other nutritional
 
 <iframe
   src="assets/fat_calories.html"
-  width="800"
+  width="1500"
   height="500"
   frameborder="0"
 ></iframe>
@@ -72,3 +72,26 @@ This table reveals several interesting patterns:
 - Higher-calorie recipes tend to be more complex, with more ingredients and steps
 - The jump in nutritional values is particularly dramatic in the highest calorie quintile (80-100%)
 - Sugar content shows the smallest relative increase across quintiles compared to other nutrients
+
+## Framing a Prediction Problem
+
+We formulated our analysis as a regression problem to predict recipe calorie content. Here's the detailed framework:
+
+**Prediction Task**: Regression  
+**Response Variable**: Calories per serving  
+**Goal**: Predict the number of calories in a recipe using its other nutritional information and characteristics
+
+We chose calories as our prediction target because:
+1. It's a crucial piece of nutritional information for health-conscious cooking
+2. It has clear real-world applications for recipe planning and dietary management
+3. It can be objectively measured, unlike subjective metrics like ratings
+
+**Evaluation Metric**: Mean Absolute Error (MAE)
+
+We selected MAE as our evaluation metric because:
+1. It provides errors in the same units as our target (calories), making it directly interpretable
+2. It represents the average number of calories our predictions are off by
+3. It handles outliers more robustly than squared error metrics, which is important given the natural variation in recipe calories
+4. The linear nature of the error better matches our use case - being off by 100 calories isn't necessarily 4 times worse than being off by 50 calories
+
+

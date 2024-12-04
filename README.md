@@ -24,7 +24,7 @@ After merging and cleaning, our analysis covers a comprehensive set of recipes w
 
 ### Data Cleaning Process
 1. Merged recipe and rating data using a left join to preserve all recipes
-2. Replaced ratings of 0 with NaN values, as these likely represent missing ratings rather than actual zero ratings
+2. Replaced ratings of 0 with NaN values, as these represent missing ratings rather than actual zero ratings
 3. Calculated average rating per recipe
 4. Extracted nutritional information from string format into separate columns
 5. Removed outliers:
@@ -34,15 +34,25 @@ After merging and cleaning, our analysis covers a comprehensive set of recipes w
 
 <iframe
   src="assets/cal_distribution.html"
-  width="800"
+  width="1200"
   height="500"
   frameborder="0"
 ></iframe>
 
 The distribution of calories across recipes shows a right-skewed pattern, with most recipes containing moderate calorie counts. This aligns with what we might expect from real-world recipes, where extreme calorie counts are less common.
 
+### Key Relationships
 
-The distribution of calories across recipes shows a right-skewed pattern, with most recipes containing moderate calorie counts. This aligns with what we might expect from real-world recipes, where extreme calorie counts are less common.
+Our analysis revealed strong correlations between calories and other nutritional components:
+
+<iframe
+  src="assets/fat_calories.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+The scatter plot demonstrates a strong positive correlation between total fat content and calories, suggesting that fat content is a key predictor of a recipe's calorie count.
 
 
 ### Nutritional Analysis by Calorie Content

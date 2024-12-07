@@ -84,11 +84,10 @@ Here's what the cleaned dataset looks like (displaying only columns relevant to 
 ### Calorie Distribution
 <iframe
   src="assets/cal_distribution.html"
-  width="800"
+  width="10001"
   height="600"
   frameborder="0"
 ></iframe>
-
 The distribution of calories across recipes shows a right-skewed pattern, with most recipes containing moderate calorie counts. This aligns with what we might expect from real-world recipes, where extreme calorie counts are less common.
 
 ### Key Relationships
@@ -97,11 +96,10 @@ Our analysis revealed strong correlations between calories and other nutritional
 
 <iframe
   src="assets/fat_calories.html"
-  width="800"
-  height="60"
+  width="1000"
+  height="600"
   frameborder="0"
 ></iframe>
-
 The scatter plot demonstrates a strong positive correlation between total fat content and calories, suggesting that fat content is a key predictor of a recipe's calorie count.
 
 ### Nutritional Analysis by Calorie Content

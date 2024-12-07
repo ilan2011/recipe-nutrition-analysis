@@ -87,7 +87,7 @@ The distribution of calories across recipes shows a right-skewed pattern, with m
 
 <iframe
   src="assets/cal_distribution.html"
-  width="10001"
+  width="800"
   height="600"
   frameborder="0"
 ></iframe>
@@ -96,7 +96,7 @@ Our analysis revealed strong correlations between calories and other nutritional
 
 <iframe
   src="assets/fat_calories.html"
-  width="1000"
+  width="800"
   height="600"
   frameborder="0"
 ></iframe>

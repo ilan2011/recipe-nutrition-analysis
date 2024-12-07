@@ -81,8 +81,7 @@ Here's what the cleaned dataset looks like (displaying only columns relevant to 
 | millionaire pound cake               | 286009 |       120 |           461724 | 2008-02-12  | ['time-to-make', 'course', 'cuisine', 'preparation | [878.3, 63.0, 326.0, 13.0, 20.0, 123.0, 39.0] |         7 | ['freheat the oven to 300 degrees', 'grease a 10-i | why a millionaire pound cake?  because it's super  | ['butter', 'sugar', 'eggs', 'all-purpose flour', ' |               7 | 813055           |      286009 | 2008-04-09 |        5 | don't let the calories and fat grams scare you off |            5 |           1 |      878.3 |          63 |     326 |       13 |        20 |             123 |              39 |
 | 2000 meatloaf                        | 475785 |        90 |          2202916 | 2012-03-06  | ['time-to-make', 'course', 'main-ingredient', 'pre | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]    |        17 | ['pan fry bacon , and set aside on a paper towel t | ready, set, cook! special edition contest entry: a | ['meatloaf mixture', 'unsmoked bacon', 'goat chees |              13 |      2.20436e+06 |      475785 | 2012-03-07 |        5 | Delicious!!!!! -- the goat cheese made the differe |            5 |           2 |      267   |          30 |      12 |       12 |        29 |              48 |               2 |
 
-
-
+### Calorie Distribution
 <iframe
   src="assets/cal_distribution.html"
   width="800"
@@ -104,7 +103,6 @@ Our analysis revealed strong correlations between calories and other nutritional
 ></iframe>
 
 The scatter plot demonstrates a strong positive correlation between total fat content and calories, suggesting that fat content is a key predictor of a recipe's calorie count.
-
 
 ### Nutritional Analysis by Calorie Content
 

@@ -138,19 +138,18 @@ I chose calories as the prediction target because:
 3. Unlike subjective measures like ratings, calories can be objectively measured and validated
 
 ### Evaluation Metric Choice
-I selected Mean Absolute Error (MAE) as the evaluation metric over alternatives like MSE/RMSE for several reasons:
+I selected Mean Absolute Error (MAE) as the evaluation metric because:
 
-1. **Interpretability**: MAE represents the average number of calories our predictions are off by, making it directly meaningful to users. For example, "our predictions are off by an average of 77 calories" is more interpretable than a squared error value.
+1. **Interpretability**: MAE shows the average calorie difference between predictions and actual values. "Our predictions are off by 77 calories" is more meaningful than a squared error.
 
-2. **Robustness**: Recipe calories naturally have some outliers (very light snacks vs. heavy meals). MAE is less sensitive to these outliers compared to squared error metrics, providing a more reliable measure of typical model performance.
+2. **Robustness**: MAE handles outliers (like very light snacks vs. heavy meals) better than squared error metrics.
 
-3. **Linear Scale**: The impact of calorie prediction errors is relatively linear so being off by 100 calories isn't necessarily 4 times worse than being off by 50 calories. This matches MAE's linear error scale better than MSE's quadratic scale.
+3. **Linear Scale**: A 100-calorie error isn't necessarily 4 times worse than a 50-calorie error. MAE's linear scale reflects this better than MSE's quadratic scale.
 
-Alternative metrics I considered but didn't choose:
-- Mean Squared Error (MSE): Would penalize large errors too heavily relative to their practical impact
-- Root Mean Squared Error (RMSE): While in the same units as calories, still overemphasizes large errors
-- Mean Percentage Error (MPE): Could be misleading for low-calorie recipes where small absolute errors would appear as large percentages
-
+Alternative metrics considered:
+- Mean Squared Error (MSE): Overpenalizes large errors
+- Root Mean Squared Error (RMSE): Same issue as MSE despite using calorie units
+- Mean Percentage Error (MPE): Misleading for low-calorie recipes where small errors appear large
 ## Baseline Model
 
 My baseline model aims to predict recipe calories using just two fundamental nutritional features:
@@ -164,8 +163,6 @@ Both features are continuous numerical values representing the Percentage of Dai
 
 Feature Breakdown:
 - Quantitative features: 2 (total fat, protein)
-- Ordinal features: 0
-- Nominal features: 0
 
 ### Model Performance
 Using a simple linear regression, our baseline model achieved:
@@ -202,7 +199,7 @@ Ratios Weren't Helpful because:
 - Engineered ratios like protein-to-fat were redundant since they're derived directly from existing features
 - The linear relationships between macronutrients and calories meant simple features worked best
 
-### Selected Features
+### Additional Selected Features
 
 1. **Basic Nutritional Components**:
   - Carbohydrates: A primary source of calories alongside fats and proteins

@@ -174,21 +174,20 @@ Using a simple linear regression, our baseline model achieved:
  - Average recipe in dataset: 332.59 calories
  - Error represents about 23.3% of mean calorie content
 
-### Model Assessment
+### Model Performance
 Is this a "good" model?
 
 Strengths:
 1. Relatively simple and interpretable
 2. Uses just two readily available nutritional metrics
 3. Average error of 77 calories is reasonable for meal planning purposes
-4. Captures the strongest correlations I observed in the exploratory analysis (total_fat correlation: 0.85, protein correlation: 0.67)
 
 Limitations:
 1. Ignores other potentially useful nutritional information (carbohydrates, sugar, etc.)
 2. Doesn't account for recipe complexity (number of steps, ingredients)
 3. Doesn't consider interactions between nutritional components
 
-While the baseline model provides a reasonable starting point, there's clear room for improvement by incorporating additional features and more sophisticated modeling techniques in our final model.
+While the baseline model provides a reasonable starting point, there's clear room for improvement.
 
 ## Final Model
 
@@ -207,14 +206,14 @@ Building upon our baseline model's total fat and protein features, I added sever
 
 3. **Engineered Nutritional Ratios**:
   - Protein-to-Fat Ratio: Helps identify recipe types (e.g., high-protein/low-fat health foods vs. rich desserts)
-  - Carbs-to-Protein Ratio: Distinguishes between carb-heavy dishes (like pasta) and protein-focused meals
-  - Saturated Fat Ratio: Indicates proportion of unhealthy fats, helping identify cooking methods and ingredient choices
+  - Carbs-to-Protein Ratio: Distinguishes between carb-heavy dishes like pasta and protein-focused meals
+  - Saturated Fat Ratio: Indicates proportion of unhealthy fats
 
 ### Modeling Choices
 I selected Lasso regression as our final model for several reasons:
 - Performs automatic feature selection through L1 regularization
 - Maintains interpretability of coefficients
-- Can handle correlated features (like our various nutritional ratios)
+- Can handle correlated features like the engineered nutritional ratios
 
 ### Hyperparameter Selection
 

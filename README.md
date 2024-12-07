@@ -101,7 +101,7 @@ Our analysis revealed strong correlations between calories and other nutritional
   frameborder="0"
 ></iframe>
 
-The scatter plot demonstrates a strong positive correlation between total fat content and calories, suggesting that fat content is a key predictor of a recipe's calorie count.
+The scatter plot demonstrates a strong positive correlation between total fat content and calories, suggesting that fat content is a strong predictor of a recipe's calorie count.
 
 Here's how nutritional values and recipe characteristics vary across calorie quintiles:
 
@@ -232,7 +232,7 @@ For our Lasso regression model, we'll tune the alpha parameter, which controls t
 ### Model Performance
 The final model achieved an MAE of 10.75 calories, compared to the baseline's 77.35 calories: an 86% improvement. 
 
-Key insights from feature coefficients:
+Insights from feature coefficients:
 1. Carbohydrates (11.54), total fat (5.59), and protein (2.21) emerged as the strongest predictors
 2. Sugar and number of ingredients had minimal impact (coefficients near zero)
 3. Some engineered features showed negative coefficients, suggesting they help correct overestimates from the primary nutritional features

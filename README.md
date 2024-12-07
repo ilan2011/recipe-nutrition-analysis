@@ -68,6 +68,9 @@ Several critical cleaning steps were necessary to prepare yhe recipe data for an
   - This step ensures our analysis isn't skewed by potential data entry errors
   - Applied to: calories, total fat, sugar, sodium, protein, saturated fat, and carbohydrates
 
+### Missing Values Analysis
+I performed a programmatic check for missing values in all relevant columns and found no missing values. Therefore, no imputation was necessary for our analysis. This completeness is likely due to Food.com's submission requirements.
+
 Here's what the cleaned dataset looks like (displaying only columns relevant to our analysis):
 
 | name                                 |     id |   minutes |   contributor_id | submitted   | tags                                               | nutrition                                     |   n_steps | steps                                              | description                                        | ingredients                                        |   n_ingredients |          user_id |   recipe_id | date       |   rating | review                                             |   avg_rating |   n_ratings |   calories |   total_fat |   sugar |   sodium |   protein |   saturated_fat |   carbohydrates |
@@ -146,7 +149,7 @@ I selected Mean Absolute Error (MAE) as the evaluation metric over alternatives 
 
 2. **Robustness**: Recipe calories naturally have some outliers (very light snacks vs. heavy meals). MAE is less sensitive to these outliers compared to squared error metrics, providing a more reliable measure of typical model performance.
 
-3. **Linear Scale**: The impact of calorie prediction errors is relatively linear - being off by 100 calories isn't necessarily 4 times worse than being off by 50 calories. This matches MAE's linear error scale better than MSE's quadratic scale.
+3. **Linear Scale**: The impact of calorie prediction errors is relatively linear so being off by 100 calories isn't necessarily 4 times worse than being off by 50 calories. This matches MAE's linear error scale better than MSE's quadratic scale.
 
 Alternative metrics I considered but didn't choose:
 - Mean Squared Error (MSE): Would penalize large errors too heavily relative to their practical impact
@@ -218,14 +221,22 @@ I selected Lasso regression as our final model for several reasons:
 - Maintains interpretability of coefficients
 - Can handle correlated features (like our various nutritional ratios)
 
+### Hyperparameter Selection
+
+For our Lasso regression model, we'll tune the alpha parameter, which controls the strength of regularization. This is important because:
+
+1. With many nutritional features that may be correlated, we need to find the right balance between fitting the data and preventing overfitting
+2. The alpha parameter will help identify which features are most important for prediction by potentially shrinking less important coefficients to zero
+
 ### Hyperparameter Tuning
 - Used GridSearchCV with 5-fold cross-validation
 - Tuned Lasso's alpha parameter across 50 values from 10^-4 to 1
 - Best alpha = 1.0000, indicating strong regularization was beneficial
 - This suggests some features were less important for prediction
 
+
 ### Model Performance
-The final model achieved an MAE of 10.75 calories, compared to the baseline's 77.35 calories - an 86% improvement. 
+The final model achieved an MAE of 10.75 calories, compared to the baseline's 77.35 calories: an 86% improvement. 
 
 Key insights from feature coefficients:
 1. Carbohydrates (11.54), total fat (5.59), and protein (2.21) emerged as the strongest predictors

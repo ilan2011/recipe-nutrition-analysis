@@ -1,8 +1,3 @@
-<style>
-.main-content iframe {
-  margin-bottom: 1rem !important;
-}
-</style>
 # Recipe Nutrition Analysis
 
 **By**: Ilan Breines  

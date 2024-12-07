@@ -233,21 +233,18 @@ For our Lasso regression model, we'll tune the alpha parameter, which controls t
 
 
 ### Model Performance
-The final model achieved an MAE of 10.77 calories, compared to the baseline's 77.35 calories, an 86% improvement.
+The final model achieved an MAE of 10.77 calories, compared to the baseline's 77.35 calories, an 86% improvement. I am quite happy with this outcome.
 
 Insights from feature coefficients:
 
 1. **Primary Nutritional Predictors**: 
    - Carbohydrates (11.16), total fat (5.61), and protein (2.18) were the strongest predictors
    - This aligns with the scientific understanding that these macronutrients directly determine caloric content
-   - The relative magnitudes reflect their caloric contributions (fats ≈ 9 cal/g, carbs and protein ≈ 4 cal/g)
 
 2. **Minimal Impact Features**:
    - Sugar and sodium had near-zero coefficients
    - Number of ingredients showed a small negative coefficient
-   - This suggests recipe characteristics are less important than basic nutritional content for predicting calories
 
 3. **Model Characteristics**:
    - The moderate Lasso alpha (0.0869) indicates some regularization was beneficial
    - The model effectively focused on the core nutritional components that directly determine calories
-   - Simpler features were more effective than complex combinations

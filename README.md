@@ -5,31 +5,78 @@
 
 ## Introduction
 
-Can we predict a recipe's calorie content based on its other nutritional information and characteristics? This analysis explores recipe data from Food.com to understand the relationships between different nutritional components and predict calorie content.
+This analysis explores recipe data from Food.com, one of the largest recipe-sharing platforms on the internet. The dataset contains recipes and their nutritional information, sourced from user submissions since 2008. Our central question is: **Can we predict a recipe's calorie content based on its other nutritional information and characteristics?**
 
-The dataset contains information from two main sources:
-- RAW_recipes.csv: Contains recipe details including nutritional information, preparation time, and steps
-- RAW_interactions.csv: Contains user ratings and reviews
+### Why This Matters
+Understanding the relationship between different nutritional components and calorie content is crucial for:
+- Home cooks trying to plan healthy meals
+- People managing their dietary intake
+- Recipe developers working on health-conscious alternatives
+- Anyone interested in understanding how different nutrients contribute to overall caloric content
 
-After merging and cleaning, our analysis covers a comprehensive set of recipes with detailed nutritional profiles, including:
-- Calories
-- Total fat (PDV - Percentage of Daily Value)
-- Sugar (PDV)
-- Sodium (PDV)
-- Protein (PDV)
-- Saturated fat (PDV)
-- Carbohydrates (PDV)
+### Dataset Overview
+The dataset contains 215,772 rows and 26 columns with detailed nutritional and preparation information as well as recipe ratings.
+
+Relevant columns for our analysis:
+- `calories`: Number of calories per serving (our prediction target)
+- `total_fat`: Total fat content as percentage of daily value (PDV)
+- `protein`: Protein content as PDV
+- `carbohydrates`: Carbohydrate content as PDV
+- `sugar`: Sugar content as PDV
+- `sodium`: Sodium content as PDV
+- `saturated_fat`: Saturated fat content as PDV
+- `n_steps`: Number of steps in the recipe preparation
+- `n_ingredients`: Number of ingredients used
 
 ## Data Cleaning and Exploratory Data Analysis
 
-### Data Cleaning Process
-1. Merged recipe and rating data using a left join to preserve all recipes
-2. Replaced ratings of 0 with NaN values, as these represent missing ratings rather than actual zero ratings
-3. Calculated average rating per recipe
-4. Extracted nutritional information from string format into separate columns
-5. Removed outliers:
-   - Filtered cooking times to between 1st and 99th percentiles
-   - Removed extreme nutritional values above 99th percentile
+## Data Cleaning Process
+
+Several critical cleaning steps were necessary to prepare our recipe data for analysis:
+
+1. **Merging Recipe and Rating Data**
+  - Performed a left join between recipes and ratings datasets to preserve all recipes even without ratings
+  - This ensures all recipes are included in our analysis, regardless of review status
+
+2. **Handling Cooking Times**
+  - Filtered out recipes with preparation times beyond the 1st and 99th percentiles
+  - This removes likely data entry errors (e.g., recipes claiming to take several days) and extremely unusual recipes
+  - Keeps our analysis focused on typical home cooking scenarios
+
+3. **Rating Processing**
+  - Replaced ratings of 0 with NaN values since 0 ratings on Food.com indicate missing ratings rather than actual zero-star reviews
+  - Calculated average rating per recipe using transform('mean') to maintain data alignment
+  - Counted number of ratings per recipe to understand review frequency
+  - Filled missing average ratings with 0 to indicate unrated recipes
+
+4. **Deduplication**
+  - Used drop_duplicates(subset='id') to keep only one instance of each unique recipe
+  - This prevents popular recipes with many reviews from being overrepresented in our analysis
+  - Ensures our calorie predictions are based on distinct recipes
+
+5. **Nutritional Information Extraction**
+  - Split the combined 'nutrition' string into separate columns for each component
+  - Converted nutrition values from strings to numeric format for analysis
+  - Original format was a list-like string: '[calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates]'
+
+6. **Tag Processing**
+  - Cleaned recipe tags by removing brackets, quotes, and extra whitespace
+  - Split tag strings into lists for potential categorical analysis
+
+7. **Outlier Removal**
+  - Removed recipes with nutritional values above the 99th percentile
+  - This step ensures our analysis isn't skewed by potential data entry errors
+  - Applied to: calories, total fat, sugar, sodium, protein, saturated fat, and carbohydrates
+
+Here's what our cleaned dataset looks like (displaying only columns relevant to our analysis):
+
+|   calories |   total_fat |   sugar |   sodium |   protein |   saturated_fat |   carbohydrates |   n_ingredients |   n_steps |
+|-----------:|------------:|--------:|---------:|----------:|----------------:|----------------:|----------------:|----------:|
+|      138.4 |          10 |      50 |        3 |         3 |              19 |               6 |               9 |        10 |
+|      595.1 |          46 |     211 |       22 |        13 |              51 |              26 |              11 |        12 |
+|      194.8 |          20 |       6 |       32 |        22 |              36 |               3 |               9 |         6 |
+|      878.3 |          63 |     326 |       13 |        20 |             123 |              39 |               7 |         7 |
+|      267   |          30 |      12 |       12 |        29 |              48 |               2 |              13 |        17 |
 
 
 <iframe
@@ -59,13 +106,13 @@ The scatter plot demonstrates a strong positive correlation between total fat co
 
 Here's how nutritional values and recipe characteristics vary across calorie quintiles:
 
-| Calorie Percentile | Total Fat (PDV) | Protein (PDV) | Carbs (PDV) | Sugar (PDV) | Sodium (PDV) | Saturated Fat (PDV) | Avg Ingredients | Avg Steps |
-|-------------------|-----------------|---------------|-------------|-------------|--------------|-------------------|----------------|------------|
-| 0-20%             | 5.06           | 4.87          | 3.08        | 20.61       | 7.88         | 5.86              | 7.29           | 7.85       |
-| 20-40%            | 11.98          | 14.04         | 6.66        | 34.91       | 12.64        | 14.29             | 8.44           | 8.94       |
-| 40-60%            | 19.69          | 25.74         | 9.19        | 41.56       | 19.28        | 24.07             | 9.20           | 9.75       |
-| 60-80%            | 30.25          | 37.95         | 12.44       | 51.03       | 26.04        | 38.79             | 9.82           | 10.78      |
-| 80-100%           | 56.60          | 59.91         | 18.13       | 66.15       | 39.25        | 69.37             | 10.57          | 12.07      |
+| calories   |   total_fat |   protein |   carbohydrates |   sugar |   sodium |   saturated_fat |   n_ingredients |   n_steps |
+|:-----------|------------:|----------:|----------------:|--------:|---------:|----------------:|----------------:|----------:|
+| 0-20%      |        4.89 |      4.75 |            3.1  |   20.98 |     7.49 |            5.74 |            7.42 |      7.96 |
+| 20-40%     |       11.9  |     14.32 |            6.76 |   35.88 |    12.66 |           14.05 |            8.66 |      9.18 |
+| 40-60%     |       19.79 |     25.46 |            9.54 |   44.43 |    18.7  |           24.07 |            9.32 |      9.87 |
+| 60-80%     |       30.41 |     37.88 |           12.8  |   54.82 |    25.5  |           38.49 |            9.91 |     10.79 |
+| 80-100%    |       57.31 |     58.81 |           18.79 |   68.64 |    38.04 |           69.57 |           10.71 |     12.08 |
 
 This table reveals several interesting patterns:
 - As calories increase, all nutritional components tend to increase proportionally
@@ -75,69 +122,113 @@ This table reveals several interesting patterns:
 
 ## Framing a Prediction Problem
 
-We formulated our analysis as a regression problem to predict recipe calorie content. Here's the detailed framework:
+We formulated our analysis as a regression problem to predict recipe calorie content from other nutritional and recipe characteristics.
 
-**Prediction Task**: Regression  
-**Response Variable**: Calories per serving  
-**Goal**: Predict the number of calories in a recipe using its other nutritional information and characteristics
+### Problem Statement
+- **Task Type**: Regression (predicting a continuous numerical value)
+- **Response Variable**: Calories per serving
+- **Features Available at Prediction Time**: 
+ - Recipe characteristics (number of steps, number of ingredients)
+ - Other nutritional information (fats, proteins, carbohydrates, etc.)
+ - Note: We can't use ratings or reviews as features since these would only be available after a recipe is published
 
+### Why Predict Calories?
 We chose calories as our prediction target because:
-1. It's a crucial piece of nutritional information for health-conscious cooking
-2. It has clear real-world applications for recipe planning and dietary management
-3. It can be objectively measured, unlike subjective metrics like ratings
+1. It's a critical nutritional metric that directly impacts meal planning and dietary decisions
+2. Accurate calorie information is essential for recipe websites and health-focused applications
+3. Unlike subjective measures like ratings, calories can be objectively measured and validated
 
-**Evaluation Metric**: Mean Absolute Error (MAE)
+### Evaluation Metric Choice
+We selected Mean Absolute Error (MAE) as our evaluation metric over alternatives like MSE/RMSE for several reasons:
 
-We selected MAE as our evaluation metric because:
-1. It provides errors in the same units as our target (calories), making it directly interpretable
-2. It represents the average number of calories our predictions are off by
-3. It handles outliers more robustly than squared error metrics, which is important given the natural variation in recipe calories
-4. The linear nature of the error better matches our use case - being off by 100 calories isn't necessarily 4 times worse than being off by 50 calories
+1. **Interpretability**: MAE represents the average number of calories our predictions are off by, making it directly meaningful to users. For example, "our predictions are off by an average of 77 calories" is more interpretable than a squared error value.
 
+2. **Robustness**: Recipe calories naturally have some outliers (very light snacks vs. heavy meals). MAE is less sensitive to these outliers compared to squared error metrics, providing a more reliable measure of typical model performance.
 
-## Base Model Performance
+3. **Linear Scale**: The impact of calorie prediction errors is relatively linear - being off by 100 calories isn't necessarily 4 times worse than being off by 50 calories. This matches MAE's linear error scale better than MSE's quadratic scale.
 
-For our baseline prediction model, we focused on two fundamental nutritional predictors:
-- Total fat content (PDV)
-- Protein content (PDV)
+Alternative metrics we considered but didn't choose:
+- Mean Squared Error (MSE): Would penalize large errors too heavily relative to their practical impact
+- Root Mean Squared Error (RMSE): While in the same units as calories, still overemphasizes large errors
+- Mean Percentage Error (MPE): Could be misleading for low-calorie recipes where small absolute errors would appear as large percentages
 
-These features were chosen because:
-1. Total fat showed the strongest correlation with calories in our exploratory analysis
-2. Protein is a key macronutrient that contributes significantly to caloric content
-3. Both measurements are readily available in standard nutritional information
+## Baseline Model
 
-Using a simple linear regression model, our baseline achieved a Mean Absolute Error (MAE) of 75.99 calories. To put this error in context:
-- The average recipe in our dataset contains 328.66 calories
-- Our model's predictions are off by about 76 calories on average
-- This represents approximately 23% of the mean calorie content
+Our baseline model aims to predict recipe calories using just two fundamental nutritional features:
 
-This relatively strong performance from just two features validates our initial analysis that these basic nutritional components are indeed strong predictors of calorie content.
+### Features
+We selected two quantitative features for our initial model:
+1. Total Fat (PDV)
+2. Protein (PDV)
 
-## Final Model Performance
+Both features are continuous numerical values representing the Percentage of Daily Value (PDV) of these nutrients. No encoding was necessary as these features were already in numerical format after our initial data cleaning.
 
-Our final model expanded upon the baseline by incorporating additional nutritional relationships and recipe characteristics that logically influence calorie content. 
-
-### Feature Engineering Rationale
-We added three key engineered features that capture important nutritional relationships:
-
-1. **Protein-to-Fat Ratio**: This ratio helps identify recipes' primary caloric sources. Since proteins (4 cal/g) and fats (9 cal/g) contribute differently to total calories, their relative proportions provide insight into caloric density.
-
-2. **Carbs-to-Protein Ratio**: Similar to protein-to-fat, this ratio helps distinguish between carbohydrate-heavy recipes (like desserts) and protein-focused dishes (like meat entrees), which typically have different caloric profiles.
-
-3. **Saturated Fat Ratio**: The proportion of total fat that is saturated helps identify recipes with different types of fat sources (e.g., plant-based oils vs. animal fats), which can indicate different cooking methods and overall caloric content.
-
-### Model Selection and Tuning
-We chose Lasso regression for our final model because:
-1. It performs automatic feature selection through L1 regularization
-2. It helps identify the most important predictors while reducing the impact of less relevant ones
-3. It maintains interpretability of coefficients, unlike black-box models
-
-We used GridSearchCV with 5-fold cross-validation to tune the Lasso's alpha parameter, testing 50 values between 10^-4 and 1. The optimal alpha value of 1.0 indicates that a strong regularization was beneficial, suggesting some features were less important for prediction.
+Feature Breakdown:
+- Quantitative features: 2 (total fat, protein)
+- Ordinal features: 0
+- Nominal features: 0
 
 ### Model Performance
-The final model achieved an MAE of 10.11 calories, compared to the baseline model's MAE of 75.99 calories - an 87% improvement in prediction accuracy. This dramatic improvement suggests that:
-1. The added nutritional ratios captured important relationships beyond raw values
-2. The combination of multiple nutritional components provides better predictive power
-3. Recipe characteristics (steps, ingredients) contribute useful additional information
+Using a simple linear regression, our baseline model achieved:
+- Mean Absolute Error (MAE): 77.35 calories
+- For context:
+ - Average recipe in dataset: 332.59 calories
+ - Error represents about 23.3% of mean calorie content
 
-The model coefficients reveal that carbohydrates, total fat, and protein remain the strongest predictors, which aligns with nutritional science as these are the primary sources of calories in food.
+### Model Assessment
+Is this a "good" model?
+
+Strengths:
+1. Relatively simple and interpretable
+2. Uses just two readily available nutritional metrics
+3. Average error of 77 calories is reasonable for meal planning purposes
+4. Captures the strongest correlations we observed in our exploratory analysis (total_fat correlation: 0.85, protein correlation: 0.67)
+
+Limitations:
+1. Ignores other potentially useful nutritional information (carbohydrates, sugar, etc.)
+2. Doesn't account for recipe complexity (number of steps, ingredients)
+3. Doesn't consider interactions between nutritional components
+
+While the baseline model provides a reasonable starting point, there's clear room for improvement by incorporating additional features and more sophisticated modeling techniques in our final model.
+
+## Final Model
+
+### Feature Engineering Rationale
+Building upon our baseline model's total fat and protein features, we added several additional features chosen based on nutritional science and cooking principles:
+
+1. **Basic Nutritional Components**:
+  - Carbohydrates: A primary source of calories alongside fats and proteins
+  - Sugar: Indicates caloric density from simple carbs
+  - Sodium: Can indicate preservation methods and cooking styles
+  - Saturated Fat: Distinguishes between different types of fats with varying caloric impacts
+
+2. **Recipe Complexity Metrics**:
+  - Number of Steps: More preparation steps often indicate more complex cooking methods that can affect caloric content
+  - Number of Ingredients: More ingredients typically suggest more complex dishes with potentially higher calorie content
+
+3. **Engineered Nutritional Ratios**:
+  - Protein-to-Fat Ratio: Helps identify recipe types (e.g., high-protein/low-fat health foods vs. rich desserts)
+  - Carbs-to-Protein Ratio: Distinguishes between carb-heavy dishes (like pasta) and protein-focused meals
+  - Saturated Fat Ratio: Indicates proportion of unhealthy fats, helping identify cooking methods and ingredient choices
+
+### Modeling Choices
+We selected Lasso regression as our final model for several reasons:
+- Performs automatic feature selection through L1 regularization
+- Maintains interpretability of coefficients
+- Can handle correlated features (like our various nutritional ratios)
+
+### Hyperparameter Tuning
+- Used GridSearchCV with 5-fold cross-validation
+- Tuned Lasso's alpha parameter across 50 values from 10^-4 to 1
+- Best alpha = 1.0000, indicating strong regularization was beneficial
+- This suggests some features were less important for prediction
+
+### Model Performance
+The final model achieved an MAE of 10.75 calories, compared to the baseline's 77.35 calories - an 86% improvement. 
+
+Key insights from feature coefficients:
+1. Carbohydrates (11.54), total fat (5.59), and protein (2.21) emerged as the strongest predictors
+2. Sugar and number of ingredients had minimal impact (coefficients near zero)
+3. Some engineered features showed negative coefficients, suggesting they help correct overestimates from the primary nutritional features
+
+This substantial improvement validates our feature engineering approach based on nutritional science, though the strong regularization suggests some engineered features were less useful than theoretically expected.

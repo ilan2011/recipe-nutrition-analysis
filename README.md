@@ -15,7 +15,7 @@ Understanding the relationship between different nutritional components and calo
 - Anyone interested in understanding how different nutrients contribute to overall caloric content
 
 ### Dataset Overview
-The dataset contains 215,772 rows and 26 columns with detailed nutritional and preparation information as well as recipe ratings.
+The dataset contains 215,772 rows with detailed nutritional and preparation information as well as recipe ratings.
 
 Relevant columns for our analysis:
 - `calories`: Number of calories per serving (our prediction target)
@@ -32,7 +32,7 @@ Relevant columns for our analysis:
 
 ## Data Cleaning Process
 
-Several critical cleaning steps were necessary to prepare our recipe data for analysis:
+Several critical cleaning steps were necessary to prepare yhe recipe data for analysis:
 
 1. **Merging Recipe and Rating Data**
   - Performed a left join between recipes and ratings datasets to preserve all recipes even without ratings
@@ -68,7 +68,7 @@ Several critical cleaning steps were necessary to prepare our recipe data for an
   - This step ensures our analysis isn't skewed by potential data entry errors
   - Applied to: calories, total fat, sugar, sodium, protein, saturated fat, and carbohydrates
 
-Here's what our cleaned dataset looks like (displaying only columns relevant to our analysis):
+Here's what the cleaned dataset looks like (displaying only columns relevant to our analysis):
 
 | name                                 |     id |   minutes |   contributor_id | submitted   | tags                                               | nutrition                                     |   n_steps | steps                                              | description                                        | ingredients                                        |   n_ingredients |          user_id |   recipe_id | date       |   rating | review                                             |   avg_rating |   n_ratings |   calories |   total_fat |   sugar |   sodium |   protein |   saturated_fat |   carbohydrates |
 |:-------------------------------------|-------:|----------:|-----------------:|:------------|:---------------------------------------------------|:----------------------------------------------|----------:|:---------------------------------------------------|:---------------------------------------------------|:---------------------------------------------------|----------------:|-----------------:|------------:|:-----------|---------:|:---------------------------------------------------|-------------:|------------:|-----------:|------------:|--------:|---------:|----------:|----------------:|----------------:|
@@ -79,10 +79,11 @@ Here's what our cleaned dataset looks like (displaying only columns relevant to 
 | 2000 meatloaf                        | 475785 |        90 |          2202916 | 2012-03-06  | ['time-to-make', 'course', 'main-ingredient', 'pre | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]    |        17 | ['pan fry bacon , and set aside on a paper towel t | ready, set, cook! special edition contest entry: a | ['meatloaf mixture', 'unsmoked bacon', 'goat chees |              13 |      2.20436e+06 |      475785 | 2012-03-07 |        5 | Delicious!!!!! -- the goat cheese made the differe |            5 |           2 |      267   |          30 |      12 |       12 |        29 |              48 |               2 |
 
 
+
 <iframe
   src="assets/cal_distribution.html"
-  width="1500"
-  height="500"
+  width="800"
+  height="600"
   frameborder="0"
 ></iframe>
 
@@ -94,8 +95,8 @@ Our analysis revealed strong correlations between calories and other nutritional
 
 <iframe
   src="assets/fat_calories.html"
-  width="1500"
-  height="500"
+  width="800"
+  height="60"
   frameborder="0"
 ></iframe>
 
@@ -122,24 +123,24 @@ This table reveals several interesting patterns:
 
 ## Framing a Prediction Problem
 
-We formulated our analysis as a regression problem to predict recipe calorie content from other nutritional and recipe characteristics.
+I formulated my analysis as a regression problem to predict recipe calorie content from other nutritional and recipe characteristics.
 
 ### Problem Statement
 - **Task Type**: Regression (predicting a continuous numerical value)
 - **Response Variable**: Calories per serving
 - **Features Available at Prediction Time**: 
- - Recipe characteristics (number of steps, number of ingredients)
  - Other nutritional information (fats, proteins, carbohydrates, etc.)
+ - Recipe characteristics (number of steps, number of ingredients)
  - Note: We can't use ratings or reviews as features since these would only be available after a recipe is published
 
 ### Why Predict Calories?
-We chose calories as our prediction target because:
+I chose calories as the prediction target because:
 1. It's a critical nutritional metric that directly impacts meal planning and dietary decisions
 2. Accurate calorie information is essential for recipe websites and health-focused applications
 3. Unlike subjective measures like ratings, calories can be objectively measured and validated
 
 ### Evaluation Metric Choice
-We selected Mean Absolute Error (MAE) as our evaluation metric over alternatives like MSE/RMSE for several reasons:
+I selected Mean Absolute Error (MAE) as the evaluation metric over alternatives like MSE/RMSE for several reasons:
 
 1. **Interpretability**: MAE represents the average number of calories our predictions are off by, making it directly meaningful to users. For example, "our predictions are off by an average of 77 calories" is more interpretable than a squared error value.
 
@@ -147,17 +148,17 @@ We selected Mean Absolute Error (MAE) as our evaluation metric over alternatives
 
 3. **Linear Scale**: The impact of calorie prediction errors is relatively linear - being off by 100 calories isn't necessarily 4 times worse than being off by 50 calories. This matches MAE's linear error scale better than MSE's quadratic scale.
 
-Alternative metrics we considered but didn't choose:
+Alternative metrics I considered but didn't choose:
 - Mean Squared Error (MSE): Would penalize large errors too heavily relative to their practical impact
 - Root Mean Squared Error (RMSE): While in the same units as calories, still overemphasizes large errors
 - Mean Percentage Error (MPE): Could be misleading for low-calorie recipes where small absolute errors would appear as large percentages
 
 ## Baseline Model
 
-Our baseline model aims to predict recipe calories using just two fundamental nutritional features:
+My baseline model aims to predict recipe calories using just two fundamental nutritional features:
 
 ### Features
-We selected two quantitative features for our initial model:
+I selected two quantitative features for my initial model:
 1. Total Fat (PDV)
 2. Protein (PDV)
 
@@ -182,7 +183,7 @@ Strengths:
 1. Relatively simple and interpretable
 2. Uses just two readily available nutritional metrics
 3. Average error of 77 calories is reasonable for meal planning purposes
-4. Captures the strongest correlations we observed in our exploratory analysis (total_fat correlation: 0.85, protein correlation: 0.67)
+4. Captures the strongest correlations I observed in the exploratory analysis (total_fat correlation: 0.85, protein correlation: 0.67)
 
 Limitations:
 1. Ignores other potentially useful nutritional information (carbohydrates, sugar, etc.)
@@ -194,7 +195,7 @@ While the baseline model provides a reasonable starting point, there's clear roo
 ## Final Model
 
 ### Feature Engineering Rationale
-Building upon our baseline model's total fat and protein features, we added several additional features chosen based on nutritional science and cooking principles:
+Building upon our baseline model's total fat and protein features, I added several additional features chosen based on nutritional science and cooking principles:
 
 1. **Basic Nutritional Components**:
   - Carbohydrates: A primary source of calories alongside fats and proteins
@@ -212,7 +213,7 @@ Building upon our baseline model's total fat and protein features, we added seve
   - Saturated Fat Ratio: Indicates proportion of unhealthy fats, helping identify cooking methods and ingredient choices
 
 ### Modeling Choices
-We selected Lasso regression as our final model for several reasons:
+I selected Lasso regression as our final model for several reasons:
 - Performs automatic feature selection through L1 regularization
 - Maintains interpretability of coefficients
 - Can handle correlated features (like our various nutritional ratios)

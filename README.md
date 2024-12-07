@@ -191,7 +191,18 @@ While the baseline model provides a reasonable starting point, there's clear roo
 ## Final Model
 
 ### Feature Engineering Rationale
-Building upon our baseline model's total fat and protein features, I added several additional features chosen based on nutritional science and cooking principles:
+
+For my final model, I initially tried adding engineered features such as nutritional ratios, but found the basic nutritional components were most effective. This makes scientific sense because:
+
+- Calories are directly determined by macronutrients
+- Basic nutrients already capture the key relationships
+
+Ratios Weren't Helpful because:
+
+- Engineered ratios like protein-to-fat were redundant since they're derived directly from existing features
+- The linear relationships between macronutrients and calories meant simple features worked best
+
+### Selected Features
 
 1. **Basic Nutritional Components**:
   - Carbohydrates: A primary source of calories alongside fats and proteins
@@ -203,10 +214,6 @@ Building upon our baseline model's total fat and protein features, I added sever
   - Number of Steps: More preparation steps often indicate more complex cooking methods that can affect caloric content
   - Number of Ingredients: More ingredients typically suggest more complex dishes with potentially higher calorie content
 
-3. **Engineered Nutritional Ratios**:
-  - Protein-to-Fat Ratio: Helps identify recipe types (e.g., high-protein/low-fat health foods vs. rich desserts)
-  - Carbs-to-Protein Ratio: Distinguishes between carb-heavy dishes like pasta and protein-focused meals
-  - Saturated Fat Ratio: Indicates proportion of unhealthy fats
 
 ### Modeling Choices
 I selected Lasso regression as our final model for several reasons:
@@ -229,11 +236,21 @@ For our Lasso regression model, we'll tune the alpha parameter, which controls t
 
 
 ### Model Performance
-The final model achieved an MAE of 10.75 calories, compared to the baseline's 77.35 calories: an 86% improvement. 
+The final model achieved an MAE of 10.77 calories, compared to the baseline's 77.35 calories, an 86% improvement.
 
 Insights from feature coefficients:
-1. Carbohydrates (11.54), total fat (5.59), and protein (2.21) emerged as the strongest predictors
-2. Sugar and number of ingredients had minimal impact (coefficients near zero)
-3. Some engineered features showed negative coefficients, suggesting they help correct overestimates from the primary nutritional features
 
-This substantial improvement validates our feature engineering approach based on nutritional science, though the strong regularization suggests some engineered features were less useful than theoretically expected.
+1. **Primary Nutritional Predictors**: 
+   - Carbohydrates (11.16), total fat (5.61), and protein (2.18) were the strongest predictors
+   - This aligns with the scientific understanding that these macronutrients directly determine caloric content
+   - The relative magnitudes reflect their caloric contributions (fats ≈ 9 cal/g, carbs and protein ≈ 4 cal/g)
+
+2. **Minimal Impact Features**:
+   - Sugar and sodium had near-zero coefficients
+   - Number of ingredients showed a small negative coefficient
+   - This suggests recipe characteristics are less important than basic nutritional content for predicting calories
+
+3. **Model Characteristics**:
+   - The moderate Lasso alpha (0.0869) indicates some regularization was beneficial
+   - The model effectively focused on the core nutritional components that directly determine calories
+   - Simpler features were more effective than complex combinations

@@ -175,7 +175,6 @@ Using a simple linear regression, our baseline model achieved:
  - Error represents about 23.3% of mean calorie content
 
 ### Model Performance
-Is this a "good" model?
 
 Strengths:
 1. Relatively simple and interpretable
